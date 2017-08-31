@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: ms-appdata: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"-->
+
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Hello World</title>
+</head>
+
+<body>
+    <div id="mainDiv" class="app">
+        <h1 style="margin-bottom: 30px;">my shopping history</h1>
+
+        <div id="locButtons">
+                <button onclick="openInput('Country')">add country</button>
+                <button onclick="openInput('City')">add city</button>
+                <button onclick="openInput('Shop')">add shop</button>
+        </div>
+
+        <div id="locations">
+
+            <select id="CountrySel" onchange="updateCities('DOM')"><option>all countries</option></select>
+
+            <select id="CitySel" onchange="updateShops('DOM')"><option>all cities</option></select>
+            
+            <select id="ShopSel" onchange="saveLastLocations('DOM')"><option>all shops</option></select>
+            
+        </div>
+
+
+        <div id="addCountryDiv" class="addLocation">
+            <div style="display: flex; justify-content: flex-start;">
+                    <button id="countryHide"   class="hideLocInput"    onclick="hideLocInput('Country')">hide</button>
+            </div>
+            <label>add country:</label>
+            <input id="addCountryIn" type="text" >
+            <button id="confCountryBut" class="locConfirm"  onclick="confLocation('Country')">confirm</button>
+        </div>
+        <div id="addCityDiv" class="addLocation">
+            <div style="display: flex; justify-content: flex-start;">
+                    <button id="cityHide"     class="hideLocInput"    onclick="hideLocInput('City')">hide</button>
+            </div>
+            <label>add city:</label>
+            <input id="addCityIn" type="text">
+            <button id="confCityBut" class="locConfirm"  onclick="confLocation('City')">confirm</button>
+        </div>
+        <div id="addShopDiv" class="addLocation">
+            <div style="display: flex; justify-content: flex-start;">
+                    <button id="shopHide"    class="hideLocInput"    onclick="hideLocInput('Shop')">hide</button>
+            </div>
+            <label>add shop:</label>
+            <input id="addShopIn" type="text">
+            <button id="confShopBut" class="locConfirm"  onclick="confLocation('Shop')">confirm</button>
+        </div>
+
+
+
+        <!--label></label-->
+        <input id="filterProds" type="text" name="" oninput="filterProds()" maxlength="20" placeholder="filter products">
+
+
+
+
+        <div id="addProductDiv">
+
+            <div style="display: flex; justify-content: center; align-items: flex-end; ">
+                <div style="margin: 0px 10px 10px 0px"><img id="pic" src=""></div>
+                <div style="margin-left- 10px">
+
+                    <div class="prodInfoInput">
+                        <label>type of product</label><br>
+                        <input id="prodType" type="text" name="">
+                        
+                    </div>
+
+                    <div class="prodInfoInput">
+                        <label>name</label><br>
+                        <input id="prodName" type="text" name="" placeholder="optional">
+                        
+                    </div>
+
+                    <div class="prodInfoInput">
+                        <label>description</label><br>
+                        <input id="prodDesc" type="text" name="" placeholder="optional max 25 chars">
+                        
+                    </div>
+                </div>
+            </div>        
+
+            <label style="margin-top: 20px;">rating</label>
+            <br>
+            <form id= "radios">
+                <input id="" type="radio"       name="rating"          value="4">very good
+                <input id="" type="radio"       name="rating"          value="3">good
+                <input id="" type="radio"       name="rating"          value="2">in crisis
+                <input id="" type="radio"       name="rating"          value="1">avoid
+            </form>
+
+            <p id="cam">take a picture</p>
+            
+
+            <button id="prodSubmit" >add to collection</button>
+            <button id="editSubmit" >confirm changes</button>
+
+            <div id="cancelAddProduct"  onclick="cancelAddProduct()"><div>x</div></div>
+        </div>
+
+
+        
+        <div id="productsDiv"></div>
+
+
+
+        <div id="editPanel">
+            <div id="cancelEditItem"  onclick="cancelEditItem()" style=""   >X</div>
+            <div id="editItem"                  >edit</div>
+            <div id="deleteItem"                >delete</div>
+        </div>
+
+        
+        <div id="addProductButton"  onclick="addProduct()">+</div>
+
+        <!--input id="newText" type="text" name="" style="border: 2px solid">new file text
+        <button id="confirm" >save file</button-->
+        <!--br>
+        <input type="text" name="" style="border: 2px solid">file name
+        <button id="" onclick="">get files</button-->
+
+        <div id="deviceready" class="blink">
+            <p class="event listening">Connecting to Device</p>
+            <p class="event received">Device is Ready</p>
+        </div>
+
+
+        <span id="console" onclick="seeConsole()" style="position: fixed; bottom: 10px; left: 10px">console</span>
+        <div id="contentList" style="display: none;"></div>
+        <!--input type="file" id="openFile" accept='text/plain' onchange='openFile(event)'>open file</button>
+        <p id="fileContents"></p-->
+    </div>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+        app.initialize();
+    </script>
+</body>
+
+</html>
